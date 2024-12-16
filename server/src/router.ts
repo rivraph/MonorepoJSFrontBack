@@ -35,4 +35,11 @@ router.get("/api/programs", programActions.browse);
 
 /* ************************************************************************* */
 
+// Declaration of a "category" route
+
+import categoryActions from "./modules/category/categoryActions";
+
+router.get("/api/categories", categoryActions.browse);
+router.get("/api/categories/:id", categoryActions.read);
+
 export default router;
