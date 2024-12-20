@@ -1,3 +1,7 @@
+import categoryRepository from "./categoryRepository";
+
+// Some data to make the trick
+
 const categories = [
   {
     id: 1,
@@ -10,26 +14,26 @@ const categories = [
 ];
 
 // Declare the actions
-const browse = (res: { json: (arg0: string[]) => void }) => {
-  const array = [];
-  for (let i = 0; i < categories.length; i++) {
-    array.push(categories[i].name);
-  }
-  res.json(array);
+
+import type { RequestHandler } from "express";
+
+const browse: RequestHandler = async (req, res) => {
+  const categoriesFromDB = await categoryRepository.readAll();
+  res.json(categoriesFromDB);
 };
 
-const read = (
-  req: { params: { id: number } },
-  res: { sendStatus: (arg0: number) => void; json: (arg0: string) => void },
-) => {
-  const itemId = Number(req.params.id);
-  const id = itemId - 1;
-  console.info(id);
+const read: RequestHandler = (req, res) => {
+  const parsedId = Number.parseInt(req.params.id);
 
-  if (id == null || id > categories.length) {
-    res.sendStatus(404);
+  const category = categories.find((p) => p.id === parsedId);
+
+  if (category != null) {
+    res.json(category);
   } else {
-    res.json(categories[id].name);
+    res.sendStatus(404);
   }
 };
+
+// Export them to import them somewhere else
+
 export default { browse, read };
